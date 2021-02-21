@@ -1,8 +1,8 @@
 
 <template>
-  <div id="3333">
+  <div id="app">
     <router-view></router-view>
-    <FooterGuide/>
+    <FooterGuide v-show="$route.meta.isShow"/>
   </div>
 </template>
 
