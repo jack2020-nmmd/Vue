@@ -1,7 +1,7 @@
 <template>
     <section class="msite">
         <!--首页头部-->
-        <ShopHeader :title = "'昌平区北七家宏福科技园(337省道北)'">
+        <ShopHeader :title = "address.name?address.name:'定位中...'">
           <!-- <span class="header_search" slot = "left">
               <i class="iconfont iconsousuo"></i>
           </span> 
@@ -320,21 +320,47 @@
 </template>
 
 <script setup>
+  import Swiper from 'swiper';
+  import "swiper/swiper.min.css";
+  import {mapState} from 'vuex';
+  export default{
+    async mounted(){
+      //let result = await getAddress(40.10038,116.36867)
+      this.$store.dispatch('getAddressAction')
+      //this.$store.commit('save_address', result.data)
+      
+      var mySwiper = new Swiper('.swiper-container', {
+        autoplay: true,//可选选项，自动滑动
+        pagination : {
+            el: '.swiper-pagination'
+          },
+        loop : true,
+      })
+     
+    },
+    computed : {
+      //...mapState(['address'])不能自定义映射的key值
+      ...mapState({
+        address:state => state.address
+      })
 
+    }
+}
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus" >
  @import "../../common/stylus/mixins.styl"
         .msite  //首页
           width 100%
           .msite_nav
-            //bottom-border-1px(#e4e4e4)
+            bottom-border-1px(#e4e4e4)
             margin-top 45px
             height 200px
             background #fff
             .swiper-container
               width 100%
               height 100%
+              swiper-theme-color: #ff6600
               .swiper-wrapper
                 width 100%
                 height 100%

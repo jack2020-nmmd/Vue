@@ -3,6 +3,7 @@ import 'lib-flexible/flexible'//淘宝自适应库
 import App from './App.vue'
 import router from './router'
 import ShopHeader from './components/ShopHeader/ShopHeader.vue'
+import store from './store';
 Vue.config.productionTip = false
 
 // new Vue({
@@ -15,5 +16,6 @@ new Vue({
   el:"#app",
   components : {App},
   template : '<App/>', //声明APP以标签的方式使用
-  router
+  router,
+  store
 })
