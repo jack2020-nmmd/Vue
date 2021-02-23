@@ -18,4 +18,4 @@ instance.interceptors.response.use(config => {
     return new Promise(()=>{})
 })
 
-export default instance
+export default instance//如果有多个不同的拦截器可以分别暴露
