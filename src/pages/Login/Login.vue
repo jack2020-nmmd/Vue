@@ -4,44 +4,57 @@
         <div class="login_header">
           <h2 class="login_logo">硅谷外卖</h2>
           <div class="login_header_title">
-            <a href="javascript:;" class="on">短信登录</a>
-            <a href="javascript:;">密码登录</a>
+            <a href="javascript:;" @click="isUserNameLogin=false"   :class="{on : !isUserNameLogin}">短信登录</a>
+            <a href="javascript:;" @click="isUserNameLogin=true" :class="{on : isUserNameLogin}">密码登录</a>
           </div>
         </div>
         <div class="login_content">
           <form>
-            <div class="on">
-              <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机号">
-                <button disabled="disabled" class="get_verification">获取验证码</button>
+            <div :class="{on : !isUserNameLogin}">
+              <section class="login_message" >
+                <input type="tel" maxlength="11" placeholder="手机号" v-model="phone" v-validate="'required|mobile'" name="phone">
+                <span style="color: red;" v-show="errors.has('phone')">{{ errors.first('phone') }}</span>
+                <!-- disabled只要一个不是false都会显示,||和&&区分什么时候回取后面的值,短路运算 -->
+                <button  
+                  :disabled="!verification || countDoenTime > 0"
+                  class="get_verification " 
+                  @click.prevent="getCode"
+                  :class="{rightPhone : verification}"
+                  >
+                    {{countDoenTime ? `${countDoenTime}秒后可重发` : '获取验证码'}}
+                </button>
               </section>
               <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="验证码">
+                <input type="tel"  maxlength="8" placeholder="验证码" v-validate="'required|number'" name="number">
+                <span style="color: red;" v-show="errors.has('number')">{{ errors.first('number') }}</span>
               </section>
               <section class="login_hint">
                 温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
                 <a href="javascript:;">《用户服务协议》</a>
               </section>
-            </div>
-            <div>
+            </div >
+            <div :class="{on : isUserNameLogin}" >
               <section>
                 <section class="login_message">
-                  <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
+                  <input type="tel" v-model= "username" maxlength="11" placeholder="手机/邮箱/用户名" v-validate="'required'" name='user'>
+                  <span style="color: red;" v-show="errors.has('user')">{{ errors.first('user') }}</span>
                 </section>
                 <section class="login_verification">
-                  <input type="tel" maxlength="8" placeholder="密码">
-                  <div class="switch_button off">
-                    <div class="switch_circle"></div>
-                    <span class="switch_text">...</span>
+                  <input :type="!showCircle?'password':'tel'" v-model= "pwd" maxlength="8" placeholder="密码" v-validate="'required'" name="pwd">
+                  <span style="color: red;" v-show="errors.has('pwd')">{{ errors.first('pwd') }}</span>
+                  <div class="switch_button" @click="showCircle=!showCircle" :class="{on : showCircle}">
+                    <div class="switch_circle" :class="{on : showCircle}"></div>
+                    <span class="switch_text">{{showCircle ? 'abc' : '...'}}</span>
                   </div>
                 </section>
                 <section class="login_message">
-                  <input type="text" maxlength="11" placeholder="验证码">
-                  <img class="get_verification" src="../../common/images/captcha.svg" alt="captcha">
+                  <input type="text" v-model="code" maxlength="11" placeholder="验证码" v-validate="'required'" name="number">
+                  <span style="color: red;" v-show="errors.has('number')">{{ errors.first('number') }}</span>
+                  <img class="get_verification" @click="replaceImage" ref="image" src="http://localhost:4000/captcha" alt="captcha">
                 </section>
               </section>
             </div>
-            <button class="login_submit">登录</button>
+            <button class="login_submit" @click.prevent="login">登录</button>
           </form>
           <a href="javascript:;" class="about_us">关于我们</a>
         </div>
@@ -54,7 +67,48 @@
 
 <script>
 export default {
-
+  data(){
+    return {
+      isUserNameLogin : true,
+      showCircle :false,
+      countDoenTime : 0,
+      phone : '',
+      veri : '',
+      code : '',
+      pwd : '',
+      username : ''
+      }
+  },
+  methods:{
+    replaceImage(){
+      this.$refs.image.src = "http://localhost:4000/captcha"
+    },
+    getCode(){
+      this.countDoenTime = 5
+      let intervalId = setInterval(() => {
+        this.countDoenTime--
+        this.countDoenTime === 0 && clearInterval(intervalId)
+      }, 1000);
+      this.$API.getCode({phone:this.phone})
+    },
+    async login(){
+      let names = this.isUserNameLogin ? ['username', 'pwd', 'code'] : ['phone', 'veri']
+      const success = await this.$validator.validateAll(names)
+      if (success) {
+        //前端验证成功开始后端验证
+        console.log(this.username, this.pwd, this.code);
+        const result = await this.$API.pwdLogin({name:this.username, pwd:this.pwd, captcha:this.code})
+        result.code === 0 && this.$router.push('/order')
+      }else{
+        alert('请正确输入')
+      }
+    }
+  },
+  computed : {
+    verification(){
+        return /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(this.phone)
+      }
+  }
 }
 </script>
 
@@ -118,6 +172,8 @@ export default {
                   color #ccc
                   font-size 14px
                   background transparent
+                  &.rightPhone
+                    color #000
               .login_verification
                 position relative
                 margin-top 16px
@@ -146,7 +202,6 @@ export default {
                   &.on
                     background #02a774
                   >.switch_circle
-                    //transform translateX(27px)
                     position absolute
                     top -1px
                     left -1px
@@ -157,6 +212,8 @@ export default {
                     background #fff
                     box-shadow 0 2px 4px 0 rgba(0,0,0,.1)
                     transition transform .3s
+                    &.on
+                      transform translateX(27px)
               .login_hint
                 margin-top 12px
                 color #999

@@ -55,7 +55,19 @@
       //let result = await getAddress(40.10038,116.36867)
       this.$store.dispatch('getAddressAction')
       //this.$store.commit('save_address', result.data)
-      this.$store.dispatch('getCategoryAction')
+      this.$store.dispatch('getCategoryAction',()=>{
+        //轮播图对象移动的第二种解决办法
+        this.$nextTick(()=>{
+          new Swiper('.swiper-container', {
+            autoplay: true,//可选选项，自动滑动
+            pagination : {
+            el: '.swiper-pagination'
+          },
+        loop : true,
+      })
+        })
+        
+    })
     },
     computed : {
       //...mapState(['address'])不能自定义映射的key值
@@ -68,19 +80,20 @@
       }
     },
     watch : {
-      categorys(){
-        //this.$nextTick保证组件下一次加载完毕执行
-        this.$nextTick(()=>{
-          new Swiper('.swiper-container', {
-            autoplay: true,//可选选项，自动滑动
-            pagination : {
-            el: '.swiper-pagination'
-          },
-        loop : true,
-      })
-        })
-      }
+      // categorys(){
+      //   //this.$nextTick保证组件下一次加载完毕执行
+      //   this.$nextTick(()=>{
+      //     //为了保证他执行也可以放在dispatch里面，但是action要接收多一个参数（常用的）
+      //   //   new Swiper('.swiper-container', {
+      //   //     autoplay: true,//可选选项，自动滑动
+      //   //     pagination : {
+      //   //     el: '.swiper-pagination'
+      //   //   },
+      //   // loop : true,
+      //     })
+      // }
     }
+    
 }
 </script>
 
