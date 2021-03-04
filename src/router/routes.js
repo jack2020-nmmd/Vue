@@ -3,6 +3,12 @@ import Order from '../pages/Order/Order.vue'
 import Profile from '../pages/Profile/Profile.vue'
 import Search from '../pages/Search/Search.vue'
 import Login from '../pages/Login/Login.vue'
+import Shop from '../pages/Shop/Shop.vue'
+import Goods from '../pages/Shop/Goods/Goods.vue'
+import Rating from '../pages/Shop/Rating/Rating.vue'
+import Info from '../pages/Shop/Info/Info.vue'
+
+import ShopContain from '../components/ShopContain/ShopContain.vue'
 const routes = [
     {
         path : "/msite",
@@ -37,8 +43,27 @@ const routes = [
         component : Login
     },
     {
+        path : "/shop",
+        component : Shop,
+        redirect : '/shop/goods',
+        children : [
+            {
+            path : "/shop/rating",
+            component : Rating,
+            },
+            {
+                path : "/shop/goods",
+                component : Goods,
+            },
+            {
+                path : "info",
+                component : Info,
+            },
+        ]
+    },
+    {
         path : "/",
-        redirect : "/login"
+        redirect : "/msite"
     },
 ]
 

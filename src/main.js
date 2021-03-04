@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import 'lib-flexible/flexible'//淘宝自适应库
 import  './components/Vee-Validate/Vee-Validate';
+import { Button } from 'mint-ui'
+import  "./mock/mockServe";
 
 import App from './App.vue'
 import router from './router'
@@ -15,6 +17,7 @@ Vue.prototype.$API = API
 // }).$mount('#app')
 //注册全局组件
 Vue.component("ShopHeader", ShopHeader)
+Vue.component(Button.name, Button)
 new Vue({
   el:"#app",
   components : {App},

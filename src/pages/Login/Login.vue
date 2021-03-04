@@ -93,14 +93,17 @@ export default {
     },
     async login(){
       let names = this.isUserNameLogin ? ['username', 'pwd', 'code'] : ['phone', 'veri']
-      const success = await this.$validator.validateAll(names)
+      const success = await this.$validator.validateAll(names)//前端验证看是否正确,返回布尔值
       if (success) {
         //前端验证成功开始后端验证
-        console.log(this.username, this.pwd, this.code);
         const result = await this.$API.pwdLogin({name:this.username, pwd:this.pwd, captcha:this.code})
+        this.$store.dispatch('saveUserTokenAction', result.data.token)
+        delete result.data.token
+        this.$store.commit('save_userinfo', result.data)
         result.code === 0 && this.$router.push('/order')
       }else{
-        alert('请正确输入')
+        console.log(success);
+        alert('请正确输入....')
       }
     }
   },

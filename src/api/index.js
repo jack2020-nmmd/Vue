@@ -5,13 +5,24 @@ export const getAddress = (latitude, longitude) => {
    return ajax(`/position/${latitude},${longitude}`)
 }
 //获取食品分类列表
-export const getCategory = () => ajax('/index_category')
+export const getCategory = () => ajax({
+   url : '/index_category',
+   headers:{
+      needToken : true
+   }
+})
 
 //根据经纬度获取商铺列表
-export const getShopList = (latitude, longitude) => ajax('/shops', {params:{
-   latitude : latitude,
-   longitude : longitude
-}})
+export const getShopList = (latitude, longitude) => ajax({
+   url : '/shops', 
+   params:{
+      latitude : latitude,
+      longitude : longitude
+   },
+   headers:{
+      needToken : true
+   }
+})
 
 //用户密码登录
 export const pwdLogin = ({name, pwd, captcha}) =>{
@@ -37,4 +48,25 @@ export const getCode = ({phone}) => {
    return ajax("/sendcode", {params:{
       phone
    }})
+}
+
+//自动登录
+export const AutoLogin = () => {
+   return ajax({
+      url:"/auto_login",
+      headers:{
+         needToken : true
+      }
+      
+   })
+   }
+//模拟测试接口
+export const test1 = () => {
+   return ajax({url:'test1'})
+}
+//使用mock获取模拟数据连接
+export const getShopData = () => {
+   return ajax({
+      url : '/getshopdata'
+   })
 }

@@ -11,13 +11,13 @@
             <div class="profile_image">
               <i class="iconfont icon-person"></i>
             </div>
-            <div class="user-info">
-              <p class="user-info-top">登录/注册</p>
+            <div class="user-info" @click="login">
+              <p class="user-info-top" v-if="!user.phone">{{user.name ? user.name : '登录注册'}}</p>
               <p>
                 <span class="user-icon">
                   <i class="iconfont icon-shouji icon-mobile"></i>
                 </span>
-                <span class="icon-mobile-number">暂无绑定手机号</span>
+                <span class="icon-mobile-number" v-if="!user.name">暂无绑定手机号</span>
               </p>
             </div>
             <span class="arrow">
@@ -93,11 +93,43 @@
             </div>
           </a>
         </section>
+        <section class="profile_my_order border-1px">
+          <!-- 退出按钮 -->
+          <!-- <button @click="outLogin">退出登录</button> -->
+          <mt-button type="danger" style="width:100%" @click="outLogin">退出登录</mt-button>
+        </section>
       </section>
 </template>
 
 <script setup>
-
+import { mapState } from 'vuex';
+import { OUT_LOGIN } from '../../store/mutation_type';
+import { MessageBox } from 'mint-ui'
+export default {
+  
+  methods : {
+    login(){
+      // !!!this.user._id && this.$router.push('/login')
+      !!this.user._id || this.$router.push('/login')
+      console.log(this.user);
+    },
+    outLogin(){
+      // if (confirm('确定退出登录吗')) {
+      //   this.$store.commit(OUT_LOGIN)
+      // }
+      MessageBox.confirm()
+        .then(
+          resolve => {this.$store.commit(OUT_LOGIN)},
+          reject => {console.log('取消');}
+        )
+    }
+  },
+  computed : {
+    ...mapState({
+      user : state => state.userInfo
+    })
+  }
+}
 </script>
 
 <style lang="stylus" scoped>
