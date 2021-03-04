@@ -1,5 +1,5 @@
 import {getAddress, getCategory, getShopList, getShopData} from '../api';
-import {SAVE_ADDRESS, SAVE_CATEGORY, SAVE_SHOPLIST, SAVE_USERTOKEN, SAVE_USERINFO,SAVE_GOODDATAS} from './mutation_type';
+import {SAVE_ADDRESS, SAVE_CATEGORY, SAVE_SHOPLIST, SAVE_USERTOKEN, SAVE_USERINFO,SAVE_GOODDATAS, ADD_COUNT, DEL_COUNT} from './mutation_type';
 
 export default {
     async getAddressAction({commit}){
@@ -34,6 +34,15 @@ export default {
         //     commit(SAVE_GOODDATAS, result.data)
         // }
         !!(result.code === 0) && commit(SAVE_GOODDATAS, result.data)
+        
+    },
+    //更改选择商品数量
+    async changeCount({commit}, {isAdd, food}){
+        if (isAdd) {
+            commit(ADD_COUNT, {food}) 
+        }else{
+            commit(DEL_COUNT, {food}) 
+        }
         
     }
 }

@@ -1,3 +1,4 @@
+import Vue from "vue";
 import {
     SAVE_ADDRESS,
     SAVE_CATEGORY,
@@ -5,7 +6,9 @@ import {
     SAVE_USERINFO,
     SAVE_USERTOKEN,
     OUT_LOGIN,
-    SAVE_GOODDATAS
+    SAVE_GOODDATAS,
+    DEL_COUNT,
+    ADD_COUNT
 } from './mutation_type';
 export default {
     //SAVE_ADDRESS不加【】不表示变量，因为他是对象的key
@@ -36,4 +39,19 @@ export default {
         state.shopDatas = shopDatas
         console.log(state.shopDatas);
     },
+    [ADD_COUNT](state, {food}){
+        if (food.count > 0) {
+            food.count++
+        }else{
+            Vue.set(food, 'count', 1)
+            //food.count = 1
+        }
+    },
+    [DEL_COUNT](state, {food}){
+        if (food.count > 0) {
+            food.count--
+        }else{
+            food.count = 0
+        }
+    }
 }

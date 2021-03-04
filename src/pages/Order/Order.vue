@@ -9,7 +9,7 @@
         <section class="profile-number">
           <a href="javascript:" class="profile-link">
             <div class="profile_image">
-              <i class="iconfont icon-person"></i>
+              <i class="iconfont iconpersonal"></i>
             </div>
             <div class="user-info" @click="login">
               <p class="user-info-top" v-if="!user.phone">{{user.name ? user.name : '登录注册'}}</p>
@@ -45,36 +45,36 @@
           <!-- 我的订单 -->
           <a href='javascript:' class="my_order">
             <span>
-              <i class="iconfont icon-order-s"></i>
+              <i class="iconfont icondingdan1"></i>
             </span>
             <div class="my_order_div">
               <span>我的订单</span>
               <span class="my_order_icon">
-                <i class="iconfont icon-jiantou1"></i>
+                <i class="iconfont iconicon-jiantou1"></i>
               </span>
             </div>
           </a>
           <!-- 积分商城 -->
           <a href='javascript:' class="my_order">
             <span>
-              <i class="iconfont icon-jifen"></i>
+              <i class="iconfont iconicon-jifen"></i>
             </span>
             <div class="my_order_div">
               <span>积分商城</span>
               <span class="my_order_icon">
-                <i class="iconfont icon-jiantou1"></i>
+                <i class="iconfont iconicon-jiantou1"></i>
               </span>
             </div>
           </a>
           <!-- 硅谷外卖会员卡 -->
           <a href="javascript:" class="my_order">
             <span>
-              <i class="iconfont icon-vip"></i>
+              <i class="iconfont  iconicon_vip_01"></i>
             </span>
             <div class="my_order_div">
               <span>硅谷外卖会员卡</span>
               <span class="my_order_icon">
-                <i class="iconfont icon-jiantou1"></i>
+                <i class="iconfont iconicon-jiantou1"></i>
               </span>
             </div>
           </a>
@@ -83,12 +83,12 @@
           <!-- 服务中心 -->
           <a href="javascript:" class="my_order">
             <span>
-              <i class="iconfont icon-fuwu"></i>
+              <i class="iconfont iconicon-fuwu"></i>
             </span>
             <div class="my_order_div">
               <span>服务中心</span>
               <span class="my_order_icon">
-                <i class="iconfont icon-jiantou1"></i>
+                <i class="iconfont iconicon-jiantou1"></i>
               </span>
             </div>
           </a>
@@ -151,7 +151,7 @@ export default {
                 border-radius 50%
                 overflow hidden
                 vertical-align top
-                .icon-person
+                .iconpersonal
                   background #e4e4e4
                   font-size 62px
               .user-info
@@ -182,7 +182,7 @@ export default {
                 position absolute
                 right 15px
                 top 40%
-                .icon-jiantou1
+                .iconicon-jiantou1
                   color #fff
                   font-size 5px
           .profile_info_data
@@ -240,11 +240,11 @@ export default {
                 >.iconfont
                   margin-left -10px
                   font-size 30px
-                .icon-order-s
+                .icondingdan1
                   color #02a774
-                .icon-jifen
+                .iconicon-jifen
                   color #ff5f3e
-                .icon-vip
+                .iconicon_vip_01
                   color #f90
                 .icon-fuwu
                   color #02a774
@@ -261,7 +261,7 @@ export default {
                 .my_order_icon
                   width 10px
                   height 10px
-                  .icon-jiantou1
+                  .iconicon-jiantou1
                     color #bbb
                     font-size 10px
   

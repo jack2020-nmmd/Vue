@@ -1,8 +1,14 @@
 <template>
     <div class="contain">
         <div class="leftContain">
-                <ul class="navList">
-                    <li v-for="(good, index) in goods" :key="index" :class="{active:false}">{{good.name}}</li>
+                <ul class="navList" ref="leftUI">
+                    <li 
+                        v-for="(good, index) in goods" 
+                        :key="index" :class="{active:currentIndex === index}"
+                        @click="chooseItem(index)"
+                     >
+                     {{good.name}}
+                    </li>
                 </ul>
         </div>
         <div class="rightContain">
@@ -27,7 +33,7 @@
                                         <span class="now">￥{{item.price}}</span>
                                     </div>
                                     <div class="cartcontrol-wrapper">
-                                    CartControl组件
+                                    <CartControl :food="item"/>
                                     </div>
                                 </div>
                             </li>
@@ -45,39 +51,66 @@
 <script setup>
     import BetterScroll from 'better-scroll'
     import {mapState} from 'vuex';
+
+    import CartControl from '../../../components/CartControl/CartControl.vue';
     export default{
         data(){
             return {
                 top : [],
-                activeIndex : 0
+                scrollY : 0,
             }
         },
+        components:{
+            CartControl
+            },
         mounted(){
             if (this.goods) {
                 this._initScroll()
                 this._initTops()
             }
-            this.top.findIndex((item, index)=>{
-
-            })
-
         },
         computed:{
             ...mapState({
                 goods : state => state.shopDatas.goods
-            })
+            }),
+            currentIndex(){
+                let {scrollY, top} = this
+                let index = top.findIndex((item, index)=>{
+                    return scrollY >= item && scrollY < top[index + 1]
+                })
+                //判断是因为计算属性比mounted早执行,一开始还没生产leftscroll
+                //this.index !== index是为了性能优化,减少调用scrolltoelement的次数
+                if (this.leftScroll && this.index !== index) {
+                    this.index = index
+                    //console.log(index);
+                    this.leftScroll.scrollToElement(this.$refs.leftUI.children[index], 1000)
+                }
+                return index
+            }
         },
         methods:{
             _initScroll(){
-                new BetterScroll('.leftContain', {
+                this.leftScroll = new BetterScroll('.leftContain', {
                     movable: true,
                     zoom: true,
-                    scrollY : true
+                    scrollY : true,
+                    probeType: 2,
+                    click : true
                 })
-                new BetterScroll('.rightContain', {
+                this.rightScroll = new BetterScroll('.rightContain', {
                     movable: true,
                     zoom: true,
-                    scrollY : true
+                    scrollY : true,
+                    probeType: 2,
+                    click : true
+                })
+                this.rightScroll.on('scroll', ({x, y})=>{
+                    this.scrollY = Math.abs(y)
+                    //console.log(this.scrollY, "methods in scroll");
+                })
+                this.rightScroll.on('scrollEnd', ({x, y})=>{
+                    this.scrollY = Math.abs(y)
+                    //console.log(this.scrollY, "methons in scrollEnd");
                 })
             },
 
@@ -97,6 +130,12 @@
                     return pre//一定要返回作为下一次的开始值
                 },initTop)
                 this.top = tops
+            },
+            chooseItem(index){
+                console.log(index);
+                // this.currentIndex = index 因为currentIndex没有set所以不能用,currentIndex是计算属性可以根据影响他的数据来让他自己计算
+                this.scrollY = this.top[index]
+                this.rightScroll.scrollToElement(this.$refs.rightUI.children[index], 1000)
             }
         },
         watch:{
