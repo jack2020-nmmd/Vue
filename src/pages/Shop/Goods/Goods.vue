@@ -43,6 +43,7 @@
                 </ul>
             </div>
         </div>
+        <ShopCar/>
     </div>
     
     
@@ -53,6 +54,7 @@
     import {mapState} from 'vuex';
 
     import CartControl from '../../../components/CartControl/CartControl.vue';
+    import ShopCar from '../../../components/ShopCar/ShopCar';
     export default{
         data(){
             return {
@@ -61,7 +63,8 @@
             }
         },
         components:{
-            CartControl
+            CartControl,
+            ShopCar
             },
         mounted(){
             if (this.goods) {
@@ -90,28 +93,33 @@
         },
         methods:{
             _initScroll(){
-                this.leftScroll = new BetterScroll('.leftContain', {
-                    movable: true,
-                    zoom: true,
-                    scrollY : true,
-                    probeType: 2,
-                    click : true
-                })
-                this.rightScroll = new BetterScroll('.rightContain', {
-                    movable: true,
-                    zoom: true,
-                    scrollY : true,
-                    probeType: 2,
-                    click : true
-                })
-                this.rightScroll.on('scroll', ({x, y})=>{
-                    this.scrollY = Math.abs(y)
-                    //console.log(this.scrollY, "methods in scroll");
-                })
-                this.rightScroll.on('scrollEnd', ({x, y})=>{
-                    this.scrollY = Math.abs(y)
-                    //console.log(this.scrollY, "methons in scrollEnd");
-                })
+                if (this.leftScroll || this.rightScroll) {
+                    this.leftScroll.refresh()
+                    this.rightScroll.refresh()
+                }else{
+                        this.leftScroll = new BetterScroll('.leftContain', {
+                        movable: true,
+                        zoom: true,
+                        scrollY : true,
+                        probeType: 2,
+                        click : true
+                    })
+                    this.rightScroll = new BetterScroll('.rightContain', {
+                        movable: true,
+                        zoom: true,
+                        scrollY : true,
+                        probeType: 2,
+                        click : true
+                    })
+                    this.rightScroll.on('scroll', ({x, y})=>{
+                        this.scrollY = Math.abs(y)
+                        //console.log(this.scrollY, "methods in scroll");
+                    })
+                    this.rightScroll.on('scrollEnd', ({x, y})=>{
+                        this.scrollY = Math.abs(y)
+                        //console.log(this.scrollY, "methons in scrollEnd");
+                    })
+                }
             },
 
             _initTops(){
@@ -156,7 +164,7 @@
     .contain
         display flex
         overflow hidden
-        height calc(100vh - 224px)
+        height calc(100vh - 224px - 48px)
         .leftContain
             // position absolute
             // bottom 0px

@@ -8,7 +8,10 @@ import {
     OUT_LOGIN,
     SAVE_GOODDATAS,
     DEL_COUNT,
-    ADD_COUNT
+    ADD_COUNT,
+    CLEAR_CAR,
+    SAVE_SHOPDATA,
+    SAVE_CHOOSEFOOD
 } from './mutation_type';
 export default {
     //SAVE_ADDRESS不加【】不表示变量，因为他是对象的key
@@ -37,7 +40,6 @@ export default {
     },
     [SAVE_GOODDATAS](state, shopDatas){//vuex里面保存一个和本地也要保存一个
         state.shopDatas = shopDatas
-        console.log(state.shopDatas);
     },
     [ADD_COUNT](state, {food}){
         if (food.count > 0) {
@@ -45,13 +47,31 @@ export default {
         }else{
             Vue.set(food, 'count', 1)
             //food.count = 1
+            state.chooseFood.push(food)
         }
     },
     [DEL_COUNT](state, {food}){
         if (food.count > 0) {
             food.count--
-        }else{
+            if (food.count === 0) {
+                // state.chooseFood.splice(state.chooseFood.indexOf(food), 1)
+                state.chooseFood.splice(state.chooseFood.findIndex((item)=>{return item===food}), 1)
+            }}
+        // }else{不用用else,因为不大于零的时候图标已经消失点击不到了
+        //     food.count = 0
+        //     state.chooseFood.splice(state.chooseFood.findIndex(food), 1)
+        //     console.log(state.chooseFood);
+        // }
+    },
+    [CLEAR_CAR](state){
+        state.chooseFood.forEach(food => {
             food.count = 0
-        }
-    }
+        });
+        state.chooseFood = []
+    },
+    
+    [SAVE_CHOOSEFOOD](state, foodDatas){//vuex里面保存一个和本地也要保存一个
+        state.chooseFood = foodDatas
+        console.log('fooddata');
+    },
 }

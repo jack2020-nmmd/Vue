@@ -13,15 +13,47 @@
 </template>
 
 <script setup>
+    import {mapState} from 'vuex';
+
     import ShopGoods from '../../components/ShopGoods/ShopGoods.vue';
+    import {SAVE_GOODDATAS,SAVE_CHOOSEFOOD} from '../../store/mutation_type';
     export default{
         components : {
             ShopGoods
             },
+        computed: {
+            ...mapState({
+                shopDatas : state => state.shopDatas,
+                chooseFood  : state => state.chooseFood
+            })
+        },
         async mounted(){
-            this.$store.dispatch('saveGoodsData')
+            //this.$store.dispatch('saveGoodsData')
+            let shopDatas =JSON.parse(sessionStorage.getItem('session_data')) 
+            if (shopDatas) {
+                //将读取到的数据保存到vuex中
+                this.$store.commit(SAVE_GOODDATAS, shopDatas)
+                //计算购物车数据,计算出来的是为了和shopdatas有关联
+                let carShop= shopDatas.goods.reduce((pre, next)=>{
+                    pre.push(...next.foods.filter((item)=>item.count > 0))//不加...会放在在二维数组
+                    return pre
+                },[])
+                console.log(carShop, 1111);
+                //存入vuex中
+                this.$store.commit(SAVE_CHOOSEFOOD, carShop)
+            }else{
+                this.$store.dispatch('saveGoodsData')
+            }
+            window.addEventListener('unload',()=>{
+                sessionStorage.setItem('session_data', JSON.stringify(this.shopDatas))
+            })
+        },
+        beforeDestroy(){
+            sessionStorage.setItem('session_data', JSON.stringify(this.shopDatas))
         }
+        
     }
+     
 </script>
 
 <style lang="stylus" scoped>

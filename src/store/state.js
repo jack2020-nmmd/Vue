@@ -5,5 +5,6 @@ export default {
     shopList : [],
     userInfo : {},
     userToken : '',
-    shopDatas : {}
+    shopDatas : {},
+    chooseFood : []
 }

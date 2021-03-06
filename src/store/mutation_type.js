@@ -9,3 +9,7 @@ export const OUT_LOGIN = "out_login"
 export const SAVE_GOODDATAS = "save_gooddatas"
 export const DEL_COUNT = "del_count"
 export const ADD_COUNT = "add_count"
+export const CLEAR_CAR = "clear_car"
+
+export const SAVE_SHOPDATA = "save_shopdata"
+export const SAVE_CHOOSEFOOD = "save_choosefood"

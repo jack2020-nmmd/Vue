@@ -1,14 +1,15 @@
 <template>
     <div class="cartcontrol">
-        <div class="iconfont iconjianhao" @click="changFoodCount(false)"></div>
-        <div class="cart-count">{{food.count}}</div>
+        <transition name="move">
+          <div class="iconfont iconjianhao" @click="changFoodCount(false)" v-show="food.count"></div>
+        </transition>
+        <div class="cart-count" v-show="food.count > 0">{{food.count}}</div>
         <div class="iconfont iconjia" @click="changFoodCount(true)"></div>
     </div>
 
 </template>
 
 <script setup>
-    import {DEL_COUNT, ADD_COUNT} from '../../store/mutation_type';
     export default {
         props:{
             food :{
@@ -18,11 +19,6 @@
         },
         methods:{
             changFoodCount(isAdd){
-                // if(isAdd){
-                //     this.$store.commit(ADD_COUNT, {food:this.food})
-                // }else{
-                //     this.$store.commit(DEL_COUNT, {food:this.food})
-                // }
                 this.$store.dispatch('changeCount', {isAdd, food:this.food})
             }
         }
@@ -46,6 +42,11 @@
       line-height 24px
       font-size 24px
       color $green
+      &.move-enter-active,  &.move-leave-active
+        transition all .5s
+      &.move-enter, &.move-leave-to 
+        transform translateX(20px) rotate(180deg)
+        opacity 0
     .cart-count
       display: inline-block
       vertical-align: top
